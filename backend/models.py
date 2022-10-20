@@ -11,4 +11,8 @@ class Register(BaseModel):
     name: str
     password: str
     account_type: str
+
+class EditAccount(BaseModel):
+    name: str
+    password: str
     
