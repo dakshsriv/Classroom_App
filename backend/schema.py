@@ -30,8 +30,8 @@ except:
 
 try:
     conn.execute('''CREATE TABLE StudentsToClassrooms
-            (STUDENT_ID INT      UNIQUE NOT NULL,
-            CLASSROOM_ID INT      UNIQUE NOT NULL);
+            (STUDENT_ID TEXT      UNIQUE NOT NULL,
+            CLASSROOM_ID TEXT      UNIQUE NOT NULL);
             ''')
 except:
     print("StudentsToClassrooms couldn't successfully be created")
@@ -39,10 +39,10 @@ except:
 
 try:
     conn.execute('''CREATE TABLE Classrooms
-            (ID INT        UNIQUE NOT NULL,
-            DESCRIPTION TEXT,
-            NAME           TEXT    NOT NULL,
-            TEACHER        TEXT  NOT NULL,
+            (ID TEXT        UNIQUE NOT NULL,
+            TITLE TEXT NOT NULL,
+            DESCRIPTION           TEXT,
+            TEACHER_ID        TEXT  NOT NULL,
             PRIMARY KEY (ID),
             FOREIGN KEY (ID) REFERENCES Users(ID));
             ''')
@@ -52,7 +52,7 @@ except:
 
 try:
     conn.execute('''CREATE TABLE Assignments
-         (ID INT        UNIQUE NOT NULL,
+         (ID TEXT        UNIQUE NOT NULL,
          DESCRIPTION TEXT,
          NAME           TEXT    NOT NULL,
          Classroom      TEXT  NOT NULL,

@@ -15,4 +15,11 @@ class Register(BaseModel):
 class EditAccount(BaseModel):
     name: str
     password: str
-    
+
+class CreateClassroom(BaseModel):
+    title: str
+    description: str
+    teacher_id: str
+
+class DeleteClassroom(BaseModel):
+    teacher_id: str
