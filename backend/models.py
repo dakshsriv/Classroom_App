@@ -23,3 +23,7 @@ class CreateClassroom(BaseModel):
 
 class DeleteClassroom(BaseModel):
     teacher_id: str
+
+class AddClass(BaseModel):
+    student_id: str
+    class_id: str
