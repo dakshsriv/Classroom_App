@@ -68,7 +68,7 @@ async def register(model: models.EditAccount, response: Response, update_id):
 async def register(response: Response, delete_id):
     cursor.execute("SELECT * FROM Students WHERE ID=?;", (delete_id,))
     x = cursor.fetchall() # Check to see if a student with that name already exists
-    cursor.execute("SELECT * FROM Teachers WHERE NAME=?;", (delete_id,))
+    cursor.execute("SELECT * FROM Teachers WHERE ID=?;", (delete_id,))
     y = cursor.fetchall() # Check to see if a student with that name already exists
     if x:
         cursor.execute("DELETE FROM Students WHERE ID=?;", (delete_id,))
@@ -164,6 +164,55 @@ async def register(response: Response, model: models.AddClass):
     rows = cursor.fetchall()
     if rows:
         cursor.execute("DELETE FROM StudentsToClassrooms WHERE CLASSROOM_ID=? AND STUDENT_ID=?;", (model.class_id, model.student_id))
+        conn.commit()
+    else:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return
+
+
+
+@app.get("/assignments/{class_id}", status_code=200)
+async def get_classes(response: Response, class_id):
+    cursor.execute("SELECT ID, NAME, DESCRIPTION FROM Assignments WHERE CLASS_ID=?;", (class_id,))
+    rows = cursor.fetchall()
+    return rows
+
+@app.post("/assignments/{class_id}", status_code=201)
+async def join_class(response: Response, model: models.AddAssignment, class_id):
+    cursor.execute('SELECT * FROM Classrooms WHERE TEACHER_ID=? AND ID=?;', (model.teacher_id, model.class_id))
+    rows = cursor.fetchall()
+    cursor.execute('SELECT * FROM Assignments WHERE NAME=?;', (model.name,))
+    rows2 = cursor.fetchall()
+    if rows and not rows2:
+        id = uuid.uuid4()
+        cursor.execute('INSERT INTO Assignments (ID, NAME, DESCRIPTION, CLASS_ID) VALUES (?,?,?,?)', (str(id), model.name, model.description, class_id))
+        conn.commit()
+        return {"id":id, "title":model.name, "description":model.description, "class_id": class_id}
+    else:
+        response.status_code= status.HTTP_400_BAD_REQUEST
+
+@app.put("/assignments/{assignment_id}", status_code=201)
+async def join_class(response: Response, model: models.AddAssignment, assignment_id):
+    cursor.execute('SELECT * FROM Classrooms WHERE TEACHER_ID=? AND ID=?;', (model.teacher_id, model.class_id))
+    rows = cursor.fetchall()
+    cursor.execute('SELECT * FROM Assignments WHERE ID=?;', (assignment_id,))
+    rows2 = cursor.fetchall()
+    if rows and rows2:
+        id = uuid.uuid4()
+        cursor.execute('UPDATE Assignments SET NAME=?, DESCRIPTION=? WHERE ID=?', (model.name, model.description, assignment_id))
+        conn.commit()
+        return {"id":assignment_id, "title":model.name, "description":model.description, "class_id": model.class_id}
+    else:
+        response.status_code= status.HTTP_400_BAD_REQUEST
+
+@app.delete("/assignments/{assignment_id}", status_code=204)
+async def register(response: Response, model: models.DeleteAssignment, assignment_id):
+    cursor.execute('SELECT * FROM Classrooms WHERE TEACHER_ID=? AND ID=?;', (model.teacher_id, model.class_id))
+    rows = cursor.fetchall()
+    cursor.execute('SELECT * FROM Assignments WHERE ID=?;', (assignment_id,))
+    rows2 = cursor.fetchall()
+    if rows and rows2:
+        cursor.execute("DELETE FROM Assignments WHERE ID=?;", (assignment_id,))
         conn.commit()
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST

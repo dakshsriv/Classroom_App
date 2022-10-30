@@ -55,7 +55,7 @@ try:
          (ID TEXT        UNIQUE NOT NULL,
          DESCRIPTION TEXT,
          NAME           TEXT    NOT NULL,
-         Classroom      TEXT  NOT NULL,
+         CLASS_ID      TEXT  NOT NULL,
          FOREIGN KEY (ID) REFERENCES Classrooms(ID));
          ''')
 except:

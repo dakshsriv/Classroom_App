@@ -27,3 +27,13 @@ class DeleteClassroom(BaseModel):
 class AddClass(BaseModel):
     student_id: str
     class_id: str
+
+class AddAssignment(BaseModel):
+    name: str
+    description: str
+    teacher_id: str
+    class_id: str
+
+class DeleteAssignment(BaseModel):
+    teacher_id: str
+    class_id: str
