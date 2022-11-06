@@ -1,55 +1,35 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/App';
-import {Login, Logout, Register} from './components/Users';
-import {Classroom, newClassroom} from './components/Classroom';
-import {Assignment, newAssignment} from './components/Assignment';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import Dashboard from './components/Dashboard';
+import Login from './components/Login'
 
 import {
-    createBrowserRouter,
-    RouterProvider,
-    Route,
+  createBrowserRouter,
+  RouterProvider,
 } from "react-router-dom";
-import './index.css'; // <-- LINK STYLESHEET IN THIS FILE
+
+import reportWebVitals from './reportWebVitals';
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <App/>,
-    },
-/*    {
-        path: "/login",
-        element: <Login />,
-    },
-    {
-        path: "/logout",
-        element: <Logout />,
-    },
-    {
-        path: "/register",
-        element: <Register />,
-    },
-    {
-        path: "/:class_id",
-        element: <Classroom />,
-    },
-    {
-        path: "/:class_id/:assignment_id",
-        element: <Assignment />,
-    },
-    {
-        path: "/new/",
-        element: <newClassroom />,
-    },
-    {
-        path: "/:class_id/new/",
-        element: <newAssignment />,
-    }, */ 
-]
-)
-ReactDOM.render(
-<React.StrictMode>
+  {
+    path: "/",
+    element: <Dashboard userID=""/>,
+  },
+  {
+    path: "/login/",
+    element: <Login/>,
+  },
+]);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
     <RouterProvider router={router} />
-</React.StrictMode>
-, document.getElementById('root')); 
-// Live-server is needed to be installed
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

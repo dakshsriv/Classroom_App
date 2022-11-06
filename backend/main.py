@@ -1,9 +1,25 @@
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, APIRouter, Response, status
 import uuid
 import sqlite3
 import models
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000/",
+    "http://127.0.0.1:3000/",
+    "http://192.168.0.28:3000/"
+    "https://localhost:3000/",
+    "localhost",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"])
 
 conn = sqlite3.connect("classroom.db")
 cursor = conn.cursor()
@@ -139,7 +155,7 @@ async def register(response: Response, model: models.DeleteClassroom, delete_id)
 
 @app.get("/classes/{student_id}", status_code=200)
 async def get_classes(response: Response, student_id):
-    cursor.execute("SELECT CLASSROOM_ID FROM StudentsToClassrooms WHERE STUDENT_ID=?;", (student_id,))
+    cursor.execute("SELECT * FROM StudentsToClassrooms WHERE STUDENT_ID=?;", (student_id,))
     rows = cursor.fetchall()
     return rows
 
