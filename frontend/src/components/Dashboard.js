@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { Navigate, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 const Dashboard = (props) => {
+    const navigate = useNavigate();
     const userID = props.userID
     const [classes, setClasses] = useState([])
 
@@ -12,7 +13,6 @@ const Dashboard = (props) => {
                 axios.get(`https://dev.dakshsrivastava.com/classes/${userID}`).then((res) => setClasses(res.data))
             }    
             else {
-                const navigate = useNavigate();
                 navigate("/login/")
             }
         },[]
@@ -20,6 +20,7 @@ const Dashboard = (props) => {
     
     return (
         <div className="App">
+            User ID: {userID}
             <ul>
                 {classes.map((ID) => <li>{ID}</li>)}
             </ul>

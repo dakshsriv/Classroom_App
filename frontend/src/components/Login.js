@@ -5,35 +5,29 @@ import useAuth from "./useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
-  const {status, setStatus} = useState("NULL");
-  const {username, setUsername} = useState("");
-  const {password, setPassword} = useState("");
-
-  const handleLogin = (event) => {
+  const {authed, login, logout} = useAuth();
+  const [status, setStatus] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  
+  const HandleLogin = (event) => {
     event.preventDefault();
-    const username = event.target[0].value
-    const password = event.target[1].value
-    axios.post(`https://dev.dakshsrivastava.com/login/`, {"name":username, "password":password}).then((res) => {setStatus(res.data.id);})
     if (status !== "NULL")
     {
-        login().then(() => {
-            navigate("/", { replace: true, state: {"id": status}});
+        console.log(`Login is ${login}`);
+        login(username, password).then(() => {
+            console.log("logged in!");navigate("/", { replace: true, state: {"id": status}});
           });
     }
   };
 
   return (
     <div>
-      <form onSubmit={handleLogin}>
-        <label>
+      <form onSubmit={HandleLogin}>
           Username:
-          <input type="text" name="username" value={username} onChange={e => setUsername(e.value)}/>
-        </label>
-        <label>
+          <input type="text" onChange={e => setUsername(e.value)}/>
           Password:
-          <input type="password" name="password" value={password} onChange={e => setPassword(e.value)}/>
-        </label>
+          <input type="password" onChange={e => setPassword(e.value)}/>
         <input type="submit" value="Submit" />
       </form>
     </div>
