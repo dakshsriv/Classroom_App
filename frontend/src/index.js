@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Dashboard from './components/Dashboard';
-import { CookiesProvider } from "react-cookie";
 import Login from './components/Login'
 
 import {
@@ -15,7 +14,7 @@ import reportWebVitals from './reportWebVitals';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Dashboard userID=""/>,
+    element: <Dashboard/>,
   },
   {
     path: "/login/",
@@ -26,9 +25,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <CookiesProvider>
     <RouterProvider router={router}/>
-    </CookiesProvider>
   </React.StrictMode>
 );
 
