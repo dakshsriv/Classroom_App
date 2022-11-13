@@ -155,7 +155,7 @@ async def register(response: Response, model: models.DeleteClassroom, delete_id)
 
 @app.get("/classes/{student_id}", status_code=200)
 async def get_classes(response: Response, student_id):
-    cursor.execute("SELECT * FROM StudentsToClassrooms WHERE STUDENT_ID=?;", (student_id,))
+    cursor.execute("SELECT CLASSROOM_ID FROM StudentsToClassrooms WHERE STUDENT_ID=?;", (student_id,))
     rows = cursor.fetchall()
     return rows
 
