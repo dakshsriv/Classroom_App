@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import {useState } from 'react'
+import {useState} from 'react'
 import Cookies from 'universal-cookie';
 
-const Login = () => {
+const NewClass = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

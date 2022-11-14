@@ -4,6 +4,7 @@ import './index.css';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Class from './components/Class';
+import Assignment from './components/Assignment';
 
 import {
   createBrowserRouter,
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/class/:id",
     element: <Class/>,
+  },
+  {
+    path: "/class/:class_id/:assignment_id",
+    element: <Assignment/>,
   },
 ]);
 

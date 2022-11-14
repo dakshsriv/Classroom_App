@@ -98,7 +98,7 @@ async def register(response: Response, delete_id):
 
 @app.get("/classrooms/", status_code=200)
 async def get_all_classrooms(response: Response):
-    cursor.execute("SELECT * FROM Classrooms;")
+    cursor.execute("SELECT ID FROM Classrooms;")
     classrooms = cursor.fetchall()
     return classrooms
 
@@ -187,9 +187,15 @@ async def register(response: Response, model: models.AddClass):
 
 
 
-@app.get("/assignments/{class_id}", status_code=200)
+@app.get("/assignments/class/{class_id}", status_code=200)
 async def get_classes(response: Response, class_id):
     cursor.execute("SELECT ID, NAME, DESCRIPTION FROM Assignments WHERE CLASS_ID=?;", (class_id,))
+    rows = cursor.fetchall()
+    return rows
+
+@app.get("/assignments/{assignment_id}", status_code=200)
+async def get_classes(response: Response, assignment_id):
+    cursor.execute("SELECT ID, NAME, DESCRIPTION FROM Assignments WHERE ID=?;", (assignment_id,))
     rows = cursor.fetchall()
     return rows
 

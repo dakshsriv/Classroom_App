@@ -7,6 +7,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const cookies = new Cookies();
     const userID = cookies.get("userID");
+    const accountType = cookies.get("accountType");
     const [classes, setClasses] = useState([]);
     const [resp, setResp] = useState("");
 
@@ -14,16 +15,27 @@ const Dashboard = () => {
         
         if (userID)
         {
-            axios.get(`https://dev.dakshsrivastava.com/classes/${userID}`).then((res) => {setClasses(res.data);});
+            if (accountType === "student")
+            {
+                axios.get(`https://dev.dakshsrivastava.com/classes/${userID}`).then((res) => {setClasses(res.data);});
+            }
+            else if (accountType === "teacher")
+            {
+                axios.get(`https://dev.dakshsrivastava.com/classrooms/teacher/${userID}`).then((res) => {setClasses(res.data);});
+            }
+            else {
+                console.log("Failure");
+            }
         }    
         else {
             navigate("/login/");
         }
-    },[userID, navigate]
+    },[userID, navigate, accountType]
     )
 
     const logout = () => {
         cookies.remove("userID");
+        cookies.remove("accountType");
         navigate("/login/")
     }
     
@@ -38,7 +50,7 @@ const Dashboard = () => {
             User ID: {userID}
             <button type="button" onClick={logout}>Log out</button>
             <ul>
-                {classes.map((ID) => <li key={ID}><a href={`http://127.0.0.1:3000/class/${ID}`}>{GetStats(ID)}</a></li>)}
+                {classes.map((ID) => <div><li key={ID}><a href={`http://127.0.0.1:3000/class/${ID}`}>{GetStats(ID)}</a></li></div>)}
             </ul>
         </div>
     );
