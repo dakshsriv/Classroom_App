@@ -25,8 +25,8 @@ const Login = () => {
           {
             console.log("User authenticated!");
             console.log("I got here!");
-            cookies.set("userID", res.data.id, { path: '/' });
-            cookies.set("accountType", res.data.type, { path: '/' });
+            cookies.set("userID", res.data.id);
+            cookies.set("accountType", res.data.type);
             const x = cookies.get("userID");
             console.log(`After setting the user ID, the cookie shows ${x}`);
             navigate("/");

@@ -1,50 +1,52 @@
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import Cookies from 'universal-cookie';
 
 const NewClass = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [title, setUsername] = useState("");
+  const [description, setPassword] = useState("");
   const cookies = new Cookies();
+
+  const userID = cookies.get("userID");
+  const accountType = cookies.get("accountType");
+
+  useEffect(() => 
+  {
+    if (accountType !== "teacher")
+    {
+      navigate("/");
+    }
+  },[accountType, navigate]);
   
-  const changeUsername = (e) => {
+  const changeTitle = (e) => {
     setUsername(e.target.value);
   }
 
-  const changePassword = (e) => {
+  const changeDescription = (e) => {
     setPassword(e.target.value);
   }
 
   const HandleLogin = async (event) => {
     event.preventDefault();
-        console.log(`Username is ${username}, Password is ${password}`);
-        axios.post(`https://dev.dakshsrivastava.com/login/`, {"name":username, "password":password}).then((res) => {
-        if (res.data.id !== "NULL")
-          {
-            console.log("User authenticated!");
-            console.log("I got here!");
-            cookies.set("userID", res.data.id, { path: '/' });
-            cookies.set("accountType", res.data.type, { path: '/' });
-            const x = cookies.get("userID");
-            console.log(`After setting the user ID, the cookie shows ${x}`);
-            navigate("/");
-          }})  
-    
+    console.log(`Username is ${title}, Password is ${description}`);
+    axios.post(`https://dev.dakshsrivastava.com/classrooms/`, {"title":title, "description":description, "teacher_id": userID}).then((res) => {
+    navigate("/");
+  })
   };
 
   return (
     <div>
       <form onSubmit={HandleLogin}>
-          Username:
-          <input type="text" autoComplete="off" value={username} onChange={e => changeUsername(e)}/>
-          Password:
-          <input type="password" autoComplete="off" value={password} onChange={e => changePassword(e)}/>
+          Title:
+          <input type="text" autoComplete="off" value={title} onChange={e => changeTitle(e)}/>
+          Description:
+          <input type="text" autoComplete="off" value={description} onChange={e => changeDescription(e)}/>
         <input type="submit" value="Submit" />
       </form>
     </div>
   );
 };
 
-export default Login;
+export default NewClass;

@@ -115,6 +115,12 @@ async def get_classrooms(response: Response, class_id):
     rows = cursor.fetchall()
     return rows
 
+@app.get("/classrooms/people/{class_id}", status_code=200)
+async def get_people(response: Response, class_id):
+    cursor.execute("SELECT NAME FROM StudentsToClassrooms JOIN Students ON Students.ID=StudentsToClassrooms.STUDENT_ID WHERE CLASSROOM_ID=?;", (class_id,))
+    rows = cursor.fetchall()
+    return rows
+
 @app.post("/classrooms/", status_code=201)
 async def create_classroom(response: Response, model: models.CreateClassroom):
     cursor.execute('SELECT * FROM Classrooms WHERE TITLE=? AND TEACHER_ID=?;', (model.title, model.teacher_id))

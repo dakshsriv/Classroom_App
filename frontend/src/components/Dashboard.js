@@ -40,8 +40,7 @@ const Dashboard = () => {
     }
     
     const GetStats = (ID) => {
-        console.log(`ID is ${ID}`)
-        axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${ID}`).then((res) => {console.log(res.data[0][1]);setResp(res.data[0][1])});
+        axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${ID}`).then((res) => {console.log(res.data);setResp(res.data[0][1])});
         return resp;
     }
 
