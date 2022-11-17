@@ -1,20 +1,33 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {useState, useEffect} from "react";
+
 import axios from "axios";
 import Cookies from 'universal-cookie';
 
 
 const Class = () => {
+    const navigate = useNavigate();
     const params = useParams();
     const cookies = new Cookies();
     const [classInfo, setClassInfo] = useState([]);
     const [students, setStudents] = useState([]);
+    const [isTeacher, setIsTeacher] = useState(false);
     const [assignments, setAssignments] = useState([]);
     const ID = params.id;
     
+    const deleteClass = () => {
+        axios.delete(`https://dev.dakshsrivastava.com/classrooms/${ID}`, {"teacher_id": cookies.get("userID")});
+        navigate("/");
+    }
+
     useEffect(() => {
     console.log(`ID is ${ID}`)
-    axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${ID}`).then((res) => {console.log(res.data);setClassInfo(res.data)});      
+    axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${ID}`).then((res) => {console.log(res.data);setClassInfo(res.data);
+    if (res.data[0][3] === cookies.get("userID"))
+    {
+      setIsTeacher(true);
+    }; 
+    });     
     axios.get(`https://dev.dakshsrivastava.com/assignments/class/${ID}`).then((res) => {console.log(res.data);setAssignments(res.data)}); 
     console.log(`assignments is ${assignments}`);   
     axios.get(`https://dev.dakshsrivastava.com/classrooms/people/${ID}`).then((res) => {console.log(res.data);setStudents(res.data)}); 
@@ -46,6 +59,8 @@ const Class = () => {
             </ul>
             <br/>
             <a href="http://127.0.0.1:3000/">All Classes</a>
+            &nbsp;
+            {isTeacher ? <div><a href={`http://127.0.0.1:3000/class/${ID}/edit`}>Edit Class</a><button type="button" onClick={deleteClass}>Delete Class</button></div> : null}
 
         </div>
     )

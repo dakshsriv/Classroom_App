@@ -8,7 +8,6 @@ const EditClass = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [classInfo,setClassInfo] = useState("");
   const cookies = new Cookies();
   const classID = params.id;
   const userID = cookies.get("userID");
@@ -26,7 +25,7 @@ const EditClass = () => {
         setTitle(res.data[0][1]);
         setDescription(res.data[0][2]);
     }}); 
-  },[classID, userID, classInfo, navigate]);
+  },[classID, userID, navigate]);
   
   const changeTitle = (e) => {
     setTitle(e.target.value);
@@ -39,7 +38,7 @@ const EditClass = () => {
   const HandleSubmit = async (event) => {
     event.preventDefault();
     axios.put(`https://dev.dakshsrivastava.com/classrooms/${classID}`, {"id": classID, "title":title, "description":description, "teacher_id": userID}).then((res) => {
-    navigate("/class/z");
+    navigate(`/class/${classID}`);
   })
   };
 

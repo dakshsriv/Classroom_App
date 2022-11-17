@@ -9,7 +9,6 @@ const Dashboard = () => {
     const userID = cookies.get("userID");
     const accountType = cookies.get("accountType");
     const [classes, setClasses] = useState([]);
-    const [resp, setResp] = useState("");
 
     useEffect(() => {
         
