@@ -38,18 +38,14 @@ const Dashboard = () => {
         cookies.remove("accountType");
         navigate("/login/")
     }
-    
-    const GetStats = (ID) => {
-        axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${ID}`).then((res) => {console.log(res.data);setResp(res.data[0][1])});
-        return resp;
-    }
 
     return (
         <div className="App">
             User ID: {userID}
             <button type="button" onClick={logout}>Log out</button>
+            <button type="button" onClick={() => navigate("/class/new")}>New Class</button>
             <ul>
-                {classes.map((ID) => <div><li key={ID}><a href={`http://127.0.0.1:3000/class/${ID}`}>{GetStats(ID)}</a></li></div>)}
+                {classes.map((ID) => <div key={ID}><li ><a href={`http://127.0.0.1:3000/class/${ID[0]}`}>{ID[1]}</a></li></div>)}
             </ul>
         </div>
     );

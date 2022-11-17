@@ -5,8 +5,8 @@ import Cookies from 'universal-cookie';
 
 const NewClass = () => {
   const navigate = useNavigate();
-  const [title, setUsername] = useState("");
-  const [description, setPassword] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const cookies = new Cookies();
 
   const userID = cookies.get("userID");
@@ -21,16 +21,15 @@ const NewClass = () => {
   },[accountType, navigate]);
   
   const changeTitle = (e) => {
-    setUsername(e.target.value);
+    setTitle(e.target.value);
   }
 
   const changeDescription = (e) => {
-    setPassword(e.target.value);
+    setDescription(e.target.value);
   }
 
-  const HandleLogin = async (event) => {
+  const HandleSubmit = async (event) => {
     event.preventDefault();
-    console.log(`Username is ${title}, Password is ${description}`);
     axios.post(`https://dev.dakshsrivastava.com/classrooms/`, {"title":title, "description":description, "teacher_id": userID}).then((res) => {
     navigate("/");
   })
@@ -38,12 +37,13 @@ const NewClass = () => {
 
   return (
     <div>
-      <form onSubmit={HandleLogin}>
+      <form onSubmit={HandleSubmit}>
           Title:
           <input type="text" autoComplete="off" value={title} onChange={e => changeTitle(e)}/>
           Description:
           <input type="text" autoComplete="off" value={description} onChange={e => changeDescription(e)}/>
         <input type="submit" value="Submit" />
+        <button type="button" onClick={() => navigate("/")}>Cancel</button>
       </form>
     </div>
   );

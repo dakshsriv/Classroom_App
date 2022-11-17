@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Class from './components/Class';
 import Assignment from './components/Assignment';
 import NewClass from './components/NewClass';
+import EditClass from './components/EditClass';
 
 import {
   createBrowserRouter,
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "/class/:id",
     element: <Class/>,
+  },
+  {
+    path: "/class/:id/edit",
+    element: <EditClass/>,
   },
   {
     path: "/class/:class_id/:assignment_id",
