@@ -104,7 +104,6 @@ async def get_all_classrooms(response: Response):
 
 @app.get("/classrooms/teacher/{teacher_id}", status_code=200)
 async def get_classrooms(response: Response, teacher_id):
-    print(f"teacher id is: {teacher_id}")
     cursor.execute("SELECT * FROM Classrooms WHERE TEACHER_ID=?;", (teacher_id,))
     rows = cursor.fetchall()
     return rows
@@ -137,7 +136,8 @@ async def create_classroom(response: Response, model: models.CreateClassroom):
         response.status_code= status.HTTP_400_BAD_REQUEST
 
 @app.put("/classrooms/{update_id}", status_code=200)
-async def create_classroom(response: Response, model: models.CreateClassroom, update_id):
+async def edit_classroom(response: Response, model: models.CreateClassroom, update_id):
+    print("Testing", update_id)
     cursor.execute('SELECT * FROM Classrooms WHERE TITLE=? AND TEACHER_ID=?;', (model.title, model.teacher_id))
     rows = cursor.fetchall()
     if rows:
@@ -148,12 +148,13 @@ async def create_classroom(response: Response, model: models.CreateClassroom, up
         response.status_code= status.HTTP_400_BAD_REQUEST
 
 @app.delete("/classrooms/{delete_id}", status_code=204)
-async def register(response: Response, model: models.DeleteClassroom, delete_id):
+async def delete_classroom(response: Response, delete_id):
+    print("Am I getting reached?")
     cursor.execute("SELECT * FROM Classrooms WHERE ID=?", (delete_id,))
     x = cursor.fetchall() # Check to see if a class with that name already exists
-    print(x, delete_id, model.teacher_id)
+     
     if x:
-        cursor.execute("DELETE FROM Classrooms WHERE TEACHER_ID=? AND ID=?;", (model.teacher_id, delete_id,))
+        cursor.execute("DELETE FROM Classrooms WHERE ID=?;", (delete_id,))
         conn.commit()
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -245,3 +246,4 @@ async def register(response: Response, model: models.DeleteAssignment, assignmen
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return
+

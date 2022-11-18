@@ -15,8 +15,9 @@ const Class = () => {
     const [assignments, setAssignments] = useState([]);
     const ID = params.id;
     
-    const deleteClass = () => {
-        axios.delete(`https://dev.dakshsrivastava.com/classrooms/${ID}`, {"teacher_id": cookies.get("userID")});
+    const deleteClass = () => { // ${ID}
+        console.log(cookies.get("userID"));
+        axios.delete(`https://dev.dakshsrivastava.com/classrooms/${ID}`); 
         navigate("/");
     }
 
