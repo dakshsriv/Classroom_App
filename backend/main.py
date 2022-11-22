@@ -116,7 +116,7 @@ async def get_classrooms(response: Response, class_id):
 
 @app.get("/classrooms/people/{class_id}", status_code=200)
 async def get_people(response: Response, class_id):
-    cursor.execute("SELECT NAME FROM StudentsToClassrooms JOIN Students ON Students.ID=StudentsToClassrooms.STUDENT_ID WHERE CLASSROOM_ID=?;", (class_id,))
+    cursor.execute("SELECT NAME, ID FROM StudentsToClassrooms JOIN Students ON Students.ID=StudentsToClassrooms.STUDENT_ID WHERE CLASSROOM_ID=?;", (class_id,))
     rows = cursor.fetchall()
     return rows
 
@@ -155,6 +155,8 @@ async def delete_classroom(response: Response, delete_id):
      
     if x:
         cursor.execute("DELETE FROM Classrooms WHERE ID=?;", (delete_id,))
+        cursor.execute("DELETE FROM StudentsToClassrooms WHERE CLASSROOM_ID=?;", (delete_id,))
+        cursor.execute("DELETE FROM Assignments WHERE CLASS_ID=?;", (delete_id,))
         conn.commit()
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -164,7 +166,14 @@ async def delete_classroom(response: Response, delete_id):
 async def get_classes(response: Response, student_id):
     cursor.execute("SELECT CLASSROOM_ID FROM StudentsToClassrooms WHERE STUDENT_ID=?;", (student_id,))
     rows = cursor.fetchall()
-    return rows
+    rowstosend = list()
+    for fid in rows:
+        id = fid[0]
+        cursor.execute("SELECT * FROM Classrooms WHERE ID=?;", (id,))
+        rows = cursor.fetchall()
+        print("Testing")
+        rowstosend.append(rows[0])
+    return rowstosend
 
 @app.post("/classes/", status_code=201)
 async def join_class(response: Response, model: models.AddClass):
@@ -181,7 +190,7 @@ async def join_class(response: Response, model: models.AddClass):
     else:
         response.status_code= status.HTTP_400_BAD_REQUEST
 
-@app.delete("/classes/", status_code=204)
+@app.put("/classes/", status_code=204)
 async def register(response: Response, model: models.AddClass):
     cursor.execute("SELECT CLASSROOM_ID FROM StudentsToClassrooms WHERE STUDENT_ID=? AND CLASSROOM_ID=?;", (model.student_id,model.class_id))
     rows = cursor.fetchall()

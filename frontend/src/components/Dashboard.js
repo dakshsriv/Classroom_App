@@ -9,6 +9,7 @@ const Dashboard = () => {
     const userID = cookies.get("userID");
     const accountType = cookies.get("accountType");
     const [classes, setClasses] = useState([]);
+    const [joinID, setJoinID] = useState("");
 
     useEffect(() => {
         
@@ -16,11 +17,15 @@ const Dashboard = () => {
         {
             if (accountType === "student")
             {
-                axios.get(`https://dev.dakshsrivastava.com/classes/${userID}`).then((res) => {setClasses(res.data);});
+                console.log("setting classes")
+                axios.get(`https://dev.dakshsrivastava.com/classes/${userID}`).then((res) => {console.log(res.data);
+                setClasses(res.data);});
             }
             else if (accountType === "teacher")
             {
-                axios.get(`https://dev.dakshsrivastava.com/classrooms/teacher/${userID}`).then((res) => {setClasses(res.data);});
+                axios.get(`https://dev.dakshsrivastava.com/classrooms/teacher/${userID}`).then((res) => {
+                    setClasses(res.data);
+                });
             }
             else {
                 console.log("Failure");
@@ -38,13 +43,29 @@ const Dashboard = () => {
         navigate("/login/")
     }
 
+    const join = () => {
+        axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${joinID}`).then((res) => {
+            console.log(res.data.length !== 0)
+            if (res.data.length !== 0)
+            {
+                axios.post(`https://dev.dakshsrivastava.com/classes`, {"class_id":joinID, "student_id":userID});
+                console.log("Sent anyway");
+                navigate(`class/${joinID}`);
+            }
+        }
+        );
+    }
     return (
         <div className="App">
             User ID: {userID}
             <button type="button" onClick={logout}>Log out</button>
-            <button type="button" onClick={() => navigate("/class/new")}>New Class</button>
+            {(accountType==="teacher") ? 
+            <button type="button" onClick={() => navigate("/class/new")}>New Class</button> 
+            : 
+            <div>Join Class: <input type="text" value={joinID} onChange={(e) => setJoinID(e.target.value)}></input><button type="button" onClick={join}>Join</button></div>
+            }
             <ul>
-                {classes.map((ID) => <div key={ID}><li ><a href={`http://127.0.0.1:3000/class/${ID[0]}`}>{ID[1]}</a></li></div>)}
+                {classes.map((ID) => <div key={ID}>{console.log(ID)}<li ><a href={`http://127.0.0.1:3000/class/${ID?.[0]}`}>{ID?.[1]}</a></li></div>)}
             </ul>
         </div>
     );
