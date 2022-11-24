@@ -191,7 +191,7 @@ async def join_class(response: Response, model: models.AddClass):
         response.status_code= status.HTTP_400_BAD_REQUEST
 
 @app.put("/classes/", status_code=204)
-async def register(response: Response, model: models.AddClass):
+async def deregister(response: Response, model: models.AddClass):
     cursor.execute("SELECT CLASSROOM_ID FROM StudentsToClassrooms WHERE STUDENT_ID=? AND CLASSROOM_ID=?;", (model.student_id,model.class_id))
     rows = cursor.fetchall()
     if rows:
@@ -219,8 +219,10 @@ async def get_classes(response: Response, assignment_id):
 async def join_class(response: Response, model: models.AddAssignment, class_id):
     cursor.execute('SELECT * FROM Classrooms WHERE TEACHER_ID=? AND ID=?;', (model.teacher_id, model.class_id))
     rows = cursor.fetchall()
+    print(rows, model.teacher_id, model.class_id)
     cursor.execute('SELECT * FROM Assignments WHERE NAME=?;', (model.name,))
     rows2 = cursor.fetchall()
+    print(not rows2)
     if rows and not rows2:
         id = uuid.uuid4()
         cursor.execute('INSERT INTO Assignments (ID, NAME, DESCRIPTION, CLASS_ID) VALUES (?,?,?,?)', (str(id), model.name, model.description, class_id))

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useRevalidator } from "react-router-dom";
 import {useState, useEffect} from "react";
 
 import axios from "axios";
@@ -38,6 +38,11 @@ const Class = () => {
     },[]
     )
 
+    const deregister = () => {
+        axios.put("https://dev.dakshsrivastava.com/classes/", {"student_id": cookies.get("userID"), "class_id": ID});
+        navigate("/");
+    }
+
     return (
         <div>
             Class ID: {ID}<br/>
@@ -51,7 +56,7 @@ const Class = () => {
 
             Students:
             <ul>
-                {students.map((student) => <li key={student}>{student}</li>)}
+                {students.map((student) => <li key={student}>{student?.[0]}</li>)}
             </ul>
 
             Assignments:
@@ -61,7 +66,7 @@ const Class = () => {
             <br/>
             <a href="http://127.0.0.1:3000/">All Classes</a>
             &nbsp;
-            {isTeacher ? <div><a href={`http://127.0.0.1:3000/class/${ID}/edit`}>Edit Class</a><button type="button" onClick={deleteClass}>Delete Class</button></div> : null}
+            {isTeacher ? <div><a href={`http://127.0.0.1:3000/class/${ID}/edit`}>Edit Class</a><button type="button" onClick={deleteClass}>Delete Class</button></div> : <button type="button" onClick={deregister}>Deregister</button>}
 
         </div>
     )
