@@ -7,6 +7,7 @@ import Class from './components/Class';
 import Assignment from './components/Assignment';
 import NewClass from './components/NewClass';
 import EditClass from './components/EditClass';
+import NewAssignment from './components/NewAssignment';
 
 import {
   createBrowserRouter,
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/class/:class_id/:assignment_id",
     element: <Assignment/>,
+  },
+  {
+    path: "/class/:class_id/newassignment",
+    element: <NewAssignment/>,
   },
 ]);
 

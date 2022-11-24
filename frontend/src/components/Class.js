@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useRevalidator } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {useState, useEffect} from "react";
 
 import axios from "axios";
@@ -13,6 +13,7 @@ const Class = () => {
     const [students, setStudents] = useState([]);
     const [isTeacher, setIsTeacher] = useState(false);
     const [assignments, setAssignments] = useState([]);
+    const [newAssignment, setNewAssignment] = useState('');
     const ID = params.id;
     
     const deleteClass = () => { // ${ID}
@@ -64,6 +65,7 @@ const Class = () => {
                 {assignments.map((assignment) => <li key={assignment}><a href={`http://127.0.0.1:3000/class/${ID}/${assignment[0]}`}>{assignment[1]}</a></li>)}
             </ul>
             <br/>
+            {isTeacher ? <button onClick={navigate("newassignment")}>Create Assignment</button> : null}
             <a href="http://127.0.0.1:3000/">All Classes</a>
             &nbsp;
             {isTeacher ? <div><a href={`http://127.0.0.1:3000/class/${ID}/edit`}>Edit Class</a><button type="button" onClick={deleteClass}>Delete Class</button></div> : <button type="button" onClick={deregister}>Deregister</button>}
