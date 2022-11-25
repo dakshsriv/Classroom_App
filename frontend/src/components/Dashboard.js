@@ -17,8 +17,7 @@ const Dashboard = () => {
         {
             if (accountType === "student")
             {
-                console.log("setting classes")
-                axios.get(`https://dev.dakshsrivastava.com/classes/${userID}`).then((res) => {console.log(res.data);
+                axios.get(`https://dev.dakshsrivastava.com/classes/${userID}`).then((res) => {
                 setClasses(res.data);});
             }
             else if (accountType === "teacher")
@@ -28,7 +27,6 @@ const Dashboard = () => {
                 });
             }
             else {
-                console.log("Failure");
             }
         }    
         else {
@@ -45,11 +43,9 @@ const Dashboard = () => {
 
     const join = () => {
         axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${joinID}`).then((res) => {
-            console.log(res.data.length !== 0)
             if (res.data.length !== 0)
             {
                 axios.post(`https://dev.dakshsrivastava.com/classes`, {"class_id":joinID, "student_id":userID});
-                console.log("Sent anyway");
                 navigate(`class/${joinID}`);
             }
         }
@@ -65,7 +61,7 @@ const Dashboard = () => {
             <div>Join Class: <input type="text" value={joinID} onChange={(e) => setJoinID(e.target.value)}></input><button type="button" onClick={join}>Join</button></div>
             }
             <ul>
-                {classes.map((ID) => <div key={ID}>{console.log(ID)}<li ><a href={`http://127.0.0.1:3000/class/${ID?.[0]}`}>{ID?.[1]}</a></li></div>)}
+                {classes.map((ID) => <div key={ID}><li ><a href={`http://127.0.0.1:3000/class/${ID?.[0]}`}>{ID?.[1]}</a></li></div>)}
             </ul>
         </div>
     );

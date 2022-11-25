@@ -3,26 +3,34 @@ import axios from 'axios';
 import {useState, useEffect} from 'react'
 import Cookies from 'universal-cookie';
 
-const NewAssignment = () => {
+const EditAssignment = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const cookies = new Cookies();
-  const ID = params.class_id;
+  const class_id = params.class_id;
+  const assignment_id = params.assignment_id;
   const userID = cookies.get("userID");
 
   useEffect(() => 
   {
-    axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${ID}`).then(
+    axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${class_id}`).then(
         (res) => {
+            console.log(res.data);
             if (res.data[0][3] !== userID)
             {
-                navigate(`/class/${ID}`);
+                navigate(`/class/${class_id}`);
             }
         }
     )
-  },[ID, userID, navigate]);
+    axios.get(`https://dev.dakshsrivastava.com/assignments/${assignment_id}`).then((res) => {
+        console.log(res.data);
+        setTitle(res.data[0][1]);
+        setDescription(res.data[0][2]);
+    })
+
+  },[class_id, userID, assignment_id, navigate]);
   
   const changeTitle = (e) => {
     setTitle(e.target.value);
@@ -34,8 +42,8 @@ const NewAssignment = () => {
 
   const HandleSubmit = async (event) => {
     event.preventDefault();
-    axios.post(`https://dev.dakshsrivastava.com/assignments/${ID}`, {"name":title, "description":description, "teacher_id": userID, "class_id": ID}).then((res) => {
-    navigate(`/class/${ID}`);
+    axios.put(`https://dev.dakshsrivastava.com/assignments/${assignment_id}`, {"name":title, "description":description, "teacher_id": userID, "class_id": class_id}).then((res) => {
+    navigate(`/class/${class_id}`);
   })
   };
 
@@ -47,10 +55,10 @@ const NewAssignment = () => {
           Description:
           <input type="text" autoComplete="off" value={description} onChange={e => changeDescription(e)}/>
         <input type="submit" value="Submit" />
-        <button type="button" onClick={() => navigate(`/class/${ID}`)}>Cancel</button>
+        <button type="button" onClick={() => navigate(`/class/${class_id}/${assignment_id}`)}>Cancel</button>
       </form>
     </div>
   );
 };
 
-export default NewAssignment;
+export default EditAssignment;

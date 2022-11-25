@@ -246,12 +246,10 @@ async def join_class(response: Response, model: models.AddAssignment, assignment
         response.status_code= status.HTTP_400_BAD_REQUEST
 
 @app.delete("/assignments/{assignment_id}", status_code=204)
-async def register(response: Response, model: models.DeleteAssignment, assignment_id):
-    cursor.execute('SELECT * FROM Classrooms WHERE TEACHER_ID=? AND ID=?;', (model.teacher_id, model.class_id))
-    rows = cursor.fetchall()
+async def register(response: Response, assignment_id):
     cursor.execute('SELECT * FROM Assignments WHERE ID=?;', (assignment_id,))
-    rows2 = cursor.fetchall()
-    if rows and rows2:
+    rows = cursor.fetchall()
+    if rows:
         cursor.execute("DELETE FROM Assignments WHERE ID=?;", (assignment_id,))
         conn.commit()
     else:

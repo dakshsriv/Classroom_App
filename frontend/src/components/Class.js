@@ -13,27 +13,22 @@ const Class = () => {
     const [students, setStudents] = useState([]);
     const [isTeacher, setIsTeacher] = useState(false);
     const [assignments, setAssignments] = useState([]);
-    const [newAssignment, setNewAssignment] = useState('');
     const ID = params.id;
     
     const deleteClass = () => { // ${ID}
-        console.log(cookies.get("userID"));
         axios.delete(`https://dev.dakshsrivastava.com/classrooms/${ID}`); 
         navigate("/");
     }
 
     useEffect(() => {
-    console.log(`ID is ${ID}`)
-    axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${ID}`).then((res) => {console.log(res.data);setClassInfo(res.data);
+    axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${ID}`).then((res) => {setClassInfo(res.data);
     if (res.data[0][3] === cookies.get("userID"))
     {
       setIsTeacher(true);
     }; 
     });     
-    axios.get(`https://dev.dakshsrivastava.com/assignments/class/${ID}`).then((res) => {console.log(res.data);setAssignments(res.data)}); 
-    console.log(`assignments is ${assignments}`);   
-    axios.get(`https://dev.dakshsrivastava.com/classrooms/people/${ID}`).then((res) => {console.log(res.data);setStudents(res.data)}); 
-    console.log(`students is ${students}`);      
+    axios.get(`https://dev.dakshsrivastava.com/assignments/class/${ID}`).then((res) => {setAssignments(res.data)}); 
+    axios.get(`https://dev.dakshsrivastava.com/classrooms/people/${ID}`).then((res) => {setStudents(res.data)});    
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]
@@ -65,7 +60,7 @@ const Class = () => {
                 {assignments.map((assignment) => <li key={assignment}><a href={`http://127.0.0.1:3000/class/${ID}/${assignment[0]}`}>{assignment[1]}</a></li>)}
             </ul>
             <br/>
-            {isTeacher ? <button onClick={navigate("newassignment")}>Create Assignment</button> : null}
+            {isTeacher ? <button onClick={() => navigate("newassignment")}>Create Assignment</button> : null}
             <a href="http://127.0.0.1:3000/">All Classes</a>
             &nbsp;
             {isTeacher ? <div><a href={`http://127.0.0.1:3000/class/${ID}/edit`}>Edit Class</a><button type="button" onClick={deleteClass}>Delete Class</button></div> : <button type="button" onClick={deregister}>Deregister</button>}
