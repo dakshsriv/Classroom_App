@@ -12,10 +12,6 @@ class Register(BaseModel):
     password: str
     account_type: str
 
-class EditAccount(BaseModel):
-    name: str
-    password: str
-
 class CreateClassroom(BaseModel):
     title: str
     description: str
@@ -37,3 +33,7 @@ class AddAssignment(BaseModel):
 class DeleteAssignment(BaseModel):
     teacher_id: str
     class_id: str
+
+class SubmitAssignment(BaseModel):
+    student_id: str
+    assignment_id: str

@@ -24,6 +24,8 @@ app.add_middleware(
 conn = sqlite3.connect("classroom.db")
 cursor = conn.cursor()
 
+########### Working with users
+
 @app.post("/register/", status_code=201)
 async def register(model: models.Register, response: Response):
     cursor.execute("SELECT * FROM Students WHERE NAME=?;", (model.name,))
@@ -62,7 +64,7 @@ async def login(model: models.Login, response: Response):
         return {"id": rows[0][0], "type":"student"}
 
 @app.put("/register/{update_id}", status_code=200)
-async def register(model: models.EditAccount, response: Response, update_id):
+async def register(model: models.Login, response: Response, update_id):
     cursor.execute("SELECT * FROM Students WHERE ID=?;", (update_id,))
     x = cursor.fetchall() # Check to see if a student with that name already exists
     cursor.execute("SELECT * FROM Teachers WHERE ID=?;", (update_id,))
@@ -95,6 +97,8 @@ async def register(response: Response, delete_id):
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return
+
+########### CRUDding a classroom
 
 @app.get("/classrooms/", status_code=200)
 async def get_all_classrooms(response: Response):
@@ -162,6 +166,8 @@ async def delete_classroom(response: Response, delete_id):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return
 
+########### Enrollment/Deregistration in a class
+
 @app.get("/classes/{student_id}", status_code=200)
 async def get_classes(response: Response, student_id):
     cursor.execute("SELECT CLASSROOM_ID FROM StudentsToClassrooms WHERE STUDENT_ID=?;", (student_id,))
@@ -201,7 +207,7 @@ async def deregister(response: Response, model: models.AddClass):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return
 
-
+########### CRUDding of an Assignment
 
 @app.get("/assignments/class/{class_id}", status_code=200)
 async def get_classes(response: Response, class_id):
@@ -222,11 +228,17 @@ async def join_class(response: Response, model: models.AddAssignment, class_id):
     print(rows, model.teacher_id, model.class_id)
     cursor.execute('SELECT * FROM Assignments WHERE NAME=?;', (model.name,))
     rows2 = cursor.fetchall()
+    cursor.execute('SELECT STUDENT_ID FROM StudentsToClassrooms WHERE CLASSROOM_ID=?;', (class_id,))
+    rows3 = cursor.fetchall()
     print(not rows2)
     if rows and not rows2:
         id = uuid.uuid4()
         cursor.execute('INSERT INTO Assignments (ID, NAME, DESCRIPTION, CLASS_ID) VALUES (?,?,?,?)', (str(id), model.name, model.description, class_id))
-        conn.commit()
+        for studentarr in rows3:
+            student = studentarr[0]
+            print(f"studentarr is {type(student)}")
+            cursor.execute('INSERT INTO SubmitAssignments (STUDENT_ID, ASSIGNMENT_ID, STATUS) VALUES (?,?,?)', (student, str(id), 0))
+            conn.commit()
         return {"id":id, "title":model.name, "description":model.description, "class_id": class_id}
     else:
         response.status_code= status.HTTP_400_BAD_REQUEST
@@ -251,8 +263,51 @@ async def register(response: Response, assignment_id):
     rows = cursor.fetchall()
     if rows:
         cursor.execute("DELETE FROM Assignments WHERE ID=?;", (assignment_id,))
+        cursor.execute("DELETE FROM SubmitAssignments WHERE ASSIGNMENT_ID=?;", (assignment_id,))
         conn.commit()
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return
 
+########### Submitting of an Assignment
+
+@app.post("/submit/", status_code=200)
+async def login(model: models.SubmitAssignment, response: Response):
+    cursor.execute("SELECT * FROM SubmitAssignments WHERE STUDENT_ID=? AND ASSIGNMENT_ID=?", (model.student_id, model.assignment_id))
+    rows = cursor.fetchall()
+    print(rows)
+    if rows:
+        status = rows[0][2]
+        new_status = 1 - status
+        print(new_status)
+        cursor.execute("UPDATE SubmitAssignments SET STATUS=? WHERE STUDENT_ID=? AND ASSIGNMENT_ID=?;", (new_status, model.student_id, model.assignment_id))
+        conn.commit()
+
+@app.post("/submissions/", status_code=200)
+async def login(class_id: str, response: Response):
+    cursor.execute("SELECT * FROM Classrooms WHERE ID=?", (class_id,))
+    rows1 = cursor.fetchall()
+    if not rows1:
+        return
+
+    cursor.execute("SELECT ID, NAME FROM StudentsToClassrooms JOIN Students ON StudentsToClassrooms.STUDENT_ID = Students.ID WHERE StudentsToClassrooms.CLASSROOM_ID=?;", (class_id,))
+    rows = cursor.fetchall()
+    ids = [x[0] for x in rows]
+    names = [x[1] for x in rows] # Get list of Student ids and names
+
+    output = dict()
+    
+    cursor.execute("SELECT ID FROM Assignments WHERE CLASS_ID=?", (class_id,))
+    rows2 = cursor.fetchall()
+    assignments = [x[0] for x in rows2] # Get list of assignment IDs
+
+    for (student_id, name) in zip(ids, names):
+        student_report = dict()
+        for assignment in assignments:
+            cursor.execute("SELECT STATUS FROM SubmitAssignments WHERE STUDENT_ID=?", (student_id,))
+            status = cursor.fetchall()
+            student_report[assignment] = status
+        output[name] = student_report
+    return output
+
+# View Submission stats for a class
