@@ -1,12 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import {useState, useEffect} from "react";
 import axios from "axios";
-//import Cookies from 'universal-cookie';
+import Cookies from 'universal-cookie';
 
 
 const Assignment = () => {
     const params = useParams();
-    //const cookies = new Cookies();
+    const cookies = new Cookies();
+    const accountType = cookies.get("accountType");
     const navigate = useNavigate();
     const [assignmentInfo, setAssignmentInfo] = useState([]);
     const [className, setClassName] = useState("");
@@ -31,8 +32,8 @@ const Assignment = () => {
             <h1>{assignmentInfo?.[0]?.[1]}</h1> <br/>
             Description: {assignmentInfo?.[0]?.[2]} <br/>
 
-            <a href={`http://127.0.0.1:3000/class/${class_id}/${assignment_id}/edit`}>Edit Assignment</a>
-            <button onClick={deleteAssignment}>Delete Assignment</button>
+            { accountType === "teacher" ? <div><a href={`http://127.0.0.1:3000/class/${class_id}/${assignment_id}/edit`}>Edit Assignment</a>
+            <button onClick={deleteAssignment}>Delete Assignment</button></div> : null}
             <a href={`http://127.0.0.1:3000/class/${class_id}`}>Back to {className?.[0]?.[1]}</a>
 
         </div>
