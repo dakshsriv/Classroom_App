@@ -282,9 +282,16 @@ async def login(model: models.SubmitAssignment, response: Response):
         print(new_status)
         cursor.execute("UPDATE SubmitAssignments SET STATUS=? WHERE STUDENT_ID=? AND ASSIGNMENT_ID=?;", (new_status, model.student_id, model.assignment_id))
         conn.commit()
+        return new_status
 
-@app.post("/submissions/", status_code=200)
-async def login(class_id: str, response: Response):
+@app.post("/status/", status_code=200)
+async def status(model: models.SubmitAssignment, response: Response):
+    cursor.execute("SELECT * FROM SubmitAssignments WHERE STUDENT_ID=? AND ASSIGNMENT_ID=?", (model.student_id, model.assignment_id))
+    rows = cursor.fetchall()
+    return rows
+
+@app.post("/submissions/{class_id}", status_code=200)
+async def login(class_id, response: Response):
     cursor.execute("SELECT * FROM Classrooms WHERE ID=?", (class_id,))
     rows1 = cursor.fetchall()
     if not rows1:
