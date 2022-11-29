@@ -63,7 +63,7 @@ const Class = () => {
             {isTeacher ? <button onClick={() => navigate("newassignment")}>Create Assignment</button> : null}
             <a href="http://127.0.0.1:3000/">All Classes</a>
             &nbsp;
-            {isTeacher ? <div><a href={`http://127.0.0.1:3000/class/${ID}/edit`}>Edit Class</a><button type="button" onClick={deleteClass}>Delete Class</button></div> : <button type="button" onClick={deregister}>Deregister</button>}
+            {isTeacher ? <div><a href={`http://127.0.0.1:3000/class/${ID}/edit`}>Edit Class</a><button type="button" onClick={deleteClass}>Delete Class</button><a href={`http://127.0.0.1:3000/class/${ID}/report`}>View Report</a></div> : <button type="button" onClick={deregister}>Deregister</button>}
 
         </div>
     )

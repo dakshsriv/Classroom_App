@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import {useState } from 'react'
-import Cookies from 'universal-cookie';
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const cookies = new Cookies();
+  const [accountType, setAccountType] = useState("");
   
   const changeUsername = (e) => {
     setUsername(e.target.value);
@@ -17,35 +16,31 @@ const Login = () => {
     setPassword(e.target.value);
   }
 
-  const HandleLogin = async (event) => {
+  const HandleRegister = async (event) => {
     event.preventDefault();
         console.log(`Username is ${username}, Password is ${password}`);
-        axios.post(`https://dev.dakshsrivastava.com/login/`, {"name":username, "password":password}).then((res) => {
+        axios.post(`https://dev.dakshsrivastava.com/register/`, {"name":username, "password":password, "account_type":accountType}).then((res) => {
         if (res.data.id !== "NULL")
           {
-            console.log("User authenticated!");
-            console.log("I got here!");
-            cookies.set("userID", res.data.id);
-            cookies.set("accountType", res.data.type);
-            const x = cookies.get("userID");
-            console.log(`After setting the user ID, the cookie shows ${x}`);
-            navigate("/");
+            navigate("/login");
           }})  
     
   };
 
   return (
     <div>
-      <form onSubmit={HandleLogin}>
+      <form onSubmit={HandleRegister}>
           Username:
           <input type="text" autoComplete="off" value={username} onChange={e => changeUsername(e)}/>
           Password:
           <input type="password" autoComplete="off" value={password} onChange={e => changePassword(e)}/>
+          <input type="radio" value="Student" name="accountType" onClick={(e) => setAccountType(e.target.value)}/> Student
+          <input type="radio" value="Teacher" name="accountType" onClick={(e) => setAccountType(e.target.value)}/> Teacher
         <input type="submit" value="Submit" />
-        <a href="/register">Register</a>
       </form>
+      <a href="/login">Login</a>
     </div>
   );
 };
 
-export default Login;
+export default Register;

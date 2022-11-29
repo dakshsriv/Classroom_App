@@ -304,17 +304,17 @@ async def login(class_id, response: Response):
 
     output = dict()
     
-    cursor.execute("SELECT ID FROM Assignments WHERE CLASS_ID=?", (class_id,))
+    cursor.execute("SELECT ID,NAME FROM Assignments WHERE CLASS_ID=?", (class_id,))
     rows2 = cursor.fetchall()
     assignments = [x[0] for x in rows2] # Get list of assignment IDs
-
+    assignment_names = [x[1] for x in rows2]
     for (student_id, name) in zip(ids, names):
         student_report = dict()
-        for assignment in assignments:
-            cursor.execute("SELECT STATUS FROM SubmitAssignments WHERE STUDENT_ID=?", (student_id,))
+        for (assignment, assignment_name) in zip(assignments, assignment_names):
+            cursor.execute("SELECT STATUS FROM SubmitAssignments WHERE STUDENT_ID=?AND ASSIGNMENT_ID=?", (student_id,assignment))
             status = cursor.fetchall()
-            student_report[assignment] = status
+            student_report[assignment_name] = status
         output[name] = student_report
-    return output
+    return [output, names, assignment_names]
 
 # View Submission stats for a class

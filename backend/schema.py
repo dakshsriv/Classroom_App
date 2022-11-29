@@ -27,16 +27,16 @@ try:
 except:
     print("Students couldn't successfully be created")
     pass
-
+"""
 try:
     conn.execute('''CREATE TABLE StudentsToClassrooms
-            (STUDENT_ID TEXT      UNIQUE NOT NULL,
-            CLASSROOM_ID TEXT      UNIQUE NOT NULL);
+            (STUDENT_ID TEXT      NOT NULL,
+            CLASSROOM_ID TEXT      NOT NULL);
             ''')
 except:
     print("StudentsToClassrooms couldn't successfully be created")
     pass
-
+"""
 try:
     conn.execute('''CREATE TABLE Classrooms
             (ID TEXT        UNIQUE NOT NULL,
@@ -61,7 +61,7 @@ try:
 except:
     print("Assignments couldn't successfully be created")
     pass
-"""
+
 
 try:
     conn.execute('''CREATE TABLE SubmitAssignments
@@ -75,3 +75,4 @@ except sqlite3.Error as er:
     pass
 
 print("Successfully created/cleared database!")
+"""

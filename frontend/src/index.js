@@ -9,7 +9,8 @@ import NewClass from './components/NewClass';
 import EditClass from './components/EditClass';
 import NewAssignment from './components/NewAssignment';
 import EditAssignment from './components/EditAssignment';
-
+import ClassReport from './components/ClassReport';
+import Register from './components/Register';
 
 import {
   createBrowserRouter,
@@ -32,8 +33,16 @@ const router = createBrowserRouter([
     element: <NewClass/>,
   },
   {
+    path: "/register",
+    element: <Register/>,
+  },
+  {
     path: "/class/:id",
     element: <Class/>,
+  },
+  {
+    path: "/class/:id/report",
+    element: <ClassReport/>,
   },
   {
     path: "/class/:id/edit",
