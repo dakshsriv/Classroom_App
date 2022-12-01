@@ -17,6 +17,7 @@ const ClassReport = () => {
   },[classID])
   return (
     <div>
+        <h1>Class Report</h1>
         <table>
             <thead>
                 <tr>
@@ -27,11 +28,14 @@ const ClassReport = () => {
                 </tr>
             </thead>
             <tbody>
-              {names.map((name) => {
-                <tr>
+              {names.map((name) => (
+                <tr key={name}>
                   <td>{name}</td>
+                  {assignments.map((assignment) => (
+                        <td key={assignment}>{report[name][assignment] ? 'Submitted' : 'Unsubmitted'}</td>
+                    ))}
                 </tr>
-              })}
+              ))}
             </tbody>
         </table>
         <a href={`/class/${classID}`}>Back to Class</a>

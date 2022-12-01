@@ -191,6 +191,13 @@ async def join_class(response: Response, model: models.AddClass):
     rows3 = cursor.fetchall()
     if not rows and rows2 and rows3:
         cursor.execute('INSERT INTO StudentsToClassrooms (STUDENT_ID, CLASSROOM_ID) VALUES (?,?)', (model.student_id, model.class_id))
+        cursor.execute('SELECT * FROM Assignments WHERE CLASS_ID=?;', (model.class_id, ))
+        rows4 = cursor.fetchall()
+        assignments = [x[0] for x in rows4]
+        print(rows4)
+        for assignment in assignments:
+            print(model.student_id, assignment)
+            cursor.execute('INSERT INTO SubmitAssignments (STUDENT_ID, ASSIGNMENT_ID, STATUS) VALUES (?,?,?)', (model.student_id, assignment, 0))
         conn.commit()
         return {"student_id": model.student_id, "class_id": model.class_id}
     else:
@@ -202,6 +209,13 @@ async def deregister(response: Response, model: models.AddClass):
     rows = cursor.fetchall()
     if rows:
         cursor.execute("DELETE FROM StudentsToClassrooms WHERE CLASSROOM_ID=? AND STUDENT_ID=?;", (model.class_id, model.student_id))
+        cursor.execute('SELECT * FROM Assignments WHERE CLASS_ID=?;', (model.class_id, ))
+        rows4 = cursor.fetchall()
+        assignments = [x[0] for x in rows4]
+        print(rows4)
+        for assignment in assignments:
+            print(model.student_id, assignment)
+            cursor.execute('DELETE FROM SubmitAssignments WHERE STUDENT_ID=? AND ASSIGNMENT_ID=?', (model.student_id, assignment))
         conn.commit()
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
