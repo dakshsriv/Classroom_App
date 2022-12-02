@@ -22,7 +22,11 @@ const Class = () => {
 
     useEffect(() => {
     axios.get(`https://dev.dakshsrivastava.com/classrooms/class/${ID}`).then((res) => {setClassInfo(res.data);
-    if (res.data[0][3] === cookies.get("userID"))
+    if (res.data.length === 0)
+    {
+        navigate('/');
+    } 
+    else if (res.data[0][3] === cookies.get("userID"))
     {
       setIsTeacher(true);
     }; 
