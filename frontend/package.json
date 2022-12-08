@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -12,6 +13,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.2",
     "react-scripts": "^5.0.1",
+    "ts-jest": "^29.0.3",
     "universal-cookie": "^4.0.4",
     "web-vitals": "^2.1.4"
   },
@@ -45,8 +47,5 @@
     "babel-jest": "^29.3.1",
     "jest": "^27.5.1",
     "react-test-renderer": "^18.2.0"
-  },
-  "jest":{
-
   }
 }

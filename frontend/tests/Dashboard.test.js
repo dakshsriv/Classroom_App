@@ -1,11 +1,6 @@
-import renderer from 'react-test-renderer';
-import Dashboard from '../components/Dashboard';
+import { render, screen } from '@testing-library/react';
+import Dashboard from '../src/components/Dashboard';
 
-it('changes the class when hovered', () => {
-  const component = renderer.create(
-    <Dashboard></Dashboard>,
-  );
-  let tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
-
+test('renders the landing page', () => {
+  render(<Dashboard />);
 });

@@ -1,12 +1,13 @@
 import sqlite3
 
 conn = sqlite3.connect("classroom.db")
-"""
+
 conn.execute('DROP TABLE IF EXISTS Teachers;')
 conn.execute('DROP TABLE IF EXISTS Assignments;')
 conn.execute('DROP TABLE IF EXISTS Students;')
 conn.execute('DROP TABLE IF EXISTS Classrooms;')
 conn.execute('DROP TABLE IF EXISTS StudentsToClassrooms;')
+conn.execute('DROP TABLE IF EXISTS SubmitAssignments;')
 
 try:
     conn.execute('''CREATE TABLE Teachers
@@ -27,7 +28,7 @@ try:
 except:
     print("Students couldn't successfully be created")
     pass
-"""
+
 try:
     conn.execute('''CREATE TABLE StudentsToClassrooms
             (STUDENT_ID TEXT      NOT NULL,
@@ -36,7 +37,7 @@ try:
 except:
     print("StudentsToClassrooms couldn't successfully be created")
     pass
-"""
+
 try:
     conn.execute('''CREATE TABLE Classrooms
             (ID TEXT        UNIQUE NOT NULL,
@@ -75,4 +76,3 @@ except sqlite3.Error as er:
     pass
 
 print("Successfully created/cleared database!")
-"""
