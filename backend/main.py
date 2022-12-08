@@ -130,6 +130,8 @@ async def get_all_classrooms(response: Response):
     conn.close() 
     return classrooms
 
+# The above function (deprecated) is just for manual testing purposes
+
 @app.get("/classrooms/teacher/{teacher_id}", status_code=200)
 async def get_classrooms(response: Response, teacher_id):
     conn, cursor = start_db()
