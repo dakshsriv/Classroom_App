@@ -1,7 +1,7 @@
 import sqlite3, requests, uuid, json
 
 
-def test_create_lassroom_pass():
+def test_update_lassroom_pass():
     conn = sqlite3.connect("../classroom.db")
     cursor = conn.cursor()
     title = str(uuid.uuid4())
@@ -19,7 +19,7 @@ def test_create_lassroom_pass():
     assert (res[0][0] == title and res[0][1] == description and res[0][2] == teacher_id), f"Error: {res[0][0]} against {title} (title), {res[0][1]} against {description} (description), {res[0][2]} against {teacher_id} (id)"
 
 
-def test_create_classroom_not_teacher():
+def test_update_classroom_not_teacher():
     conn = sqlite3.connect("../classroom.db")
     cursor = conn.cursor()
     title = str(uuid.uuid4())
@@ -34,7 +34,7 @@ def test_create_classroom_not_teacher():
     assert (x.status_code == 400)
 
 
-def test_create_classroom_exists():
+def test_update_classroom_exists():
     conn = sqlite3.connect("../classroom.db")
     cursor = conn.cursor()
     title = str(uuid.uuid4())

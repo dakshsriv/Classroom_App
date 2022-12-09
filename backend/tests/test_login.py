@@ -16,7 +16,7 @@ def test_login_student():
     conn.commit()
     conn.close()
 
-def test_login_teacher():
+def test_login_teacher(): # Problem
     conn = sqlite3.connect("../classroom.db")
     cursor = conn.cursor()
     username = str(uuid.uuid4())
@@ -29,4 +29,6 @@ def test_login_teacher():
     a = json.loads(x.text)
     assert (a["id"] == "NULL")
     cursor.execute("DELETE FROM Teachers WHERE NAME=? AND PASSWORD=?", (username, password))
+    conn.commit()
     conn.close()
+

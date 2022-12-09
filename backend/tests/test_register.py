@@ -1,5 +1,6 @@
 import sqlite3, requests, uuid
 
+
 def test_register_student():
     conn = sqlite3.connect("../classroom.db")
     cursor = conn.cursor()
