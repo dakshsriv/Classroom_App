@@ -1,12 +1,12 @@
 import sqlite3, requests, uuid, json
 
 
-def test_create_lassroom_pass():
+def test_create_classroom_pass():
     conn = sqlite3.connect("../classroom.db")
     cursor = conn.cursor()
     title = str(uuid.uuid4())
     description = str(uuid.uuid4())
-    x0 = requests.post("https://dev.dakshsrivastava.com/register", json = {"name": "username", "password": "password", "account_type": "Teacher"}, verify=False)
+    x0 = requests.post("https://dev.dakshsrivastava.com/register", json = {"name": "username1", "password": "password1", "account_type": "Teacher"}, verify=False)
     teacher_id = json.loads(x0.text)["id"]
     _ = requests.post("https://dev.dakshsrivastava.com/classrooms", json={"title": title, "description": description, "teacher_id":teacher_id}, verify=False)
     #cursor.execute("SELECT * FROM Classrooms WHERE TITLE=? AND DESCRIPTION=? AND TEACHER_ID=?", (title, description, teacher_id))
