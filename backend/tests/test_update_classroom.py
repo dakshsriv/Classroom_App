@@ -16,7 +16,7 @@ def test_update_classroom_pass():
     cursor.execute("DELETE FROM Teachers WHERE ID=?", (teacher_id,))
     conn.commit()
     conn.close()
-    assert (res[0][0] == "This is what should be seen"), f"Error: {res[0][0]} against {title} (title), {res[0][1]} against {description} (description), {res[0][2]} against {teacher_id} (id)"
+    assert (res[0][0] == "This is what should be seen"), f"res is {res}"
 
 
 def test_update_classroom_unauthorized():

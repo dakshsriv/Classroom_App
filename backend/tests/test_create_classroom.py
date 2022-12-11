@@ -10,13 +10,13 @@ def test_create_classroom_pass():
     teacher_id = json.loads(x0.text)["id"]
     _ = requests.post("https://dev.dakshsrivastava.com/classrooms", json={"title": title, "description": description, "teacher_id":teacher_id}, verify=False)
     #cursor.execute("SELECT * FROM Classrooms WHERE TITLE=? AND DESCRIPTION=? AND TEACHER_ID=?", (title, description, teacher_id))
-    cursor.execute("SELECT TITLE, DESCRIPTION, TEACHER_ID FROM Classrooms")
+    cursor.execute("SELECT TITLE, DESCRIPTION, TEACHER_ID FROM Classrooms WHERE TEACHER_ID=?", (teacher_id,))
     res = cursor.fetchall()
     cursor.execute("DELETE FROM Classrooms WHERE TITLE=? AND DESCRIPTION=? AND TEACHER_ID=?", (title, description, teacher_id))
     cursor.execute("DELETE FROM Teachers WHERE ID=?", (teacher_id,))
     conn.commit()
     conn.close()
-    assert (res[0][0] == title and res[0][1] == description and res[0][2] == teacher_id), f"Error: {res[0][0]} against {title} (title), {res[0][1]} against {description} (description), {res[0][2]} against {teacher_id} (id)"
+    assert (res[0][0] == title and res[0][1] == description and res[0][2] == teacher_id), f"Res: {res}, title: {title}, description: {description}, teacherID: {teacher_id}"
 
 
 def test_create_classroom_not_teacher():

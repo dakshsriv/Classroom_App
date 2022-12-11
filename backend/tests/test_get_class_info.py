@@ -1,4 +1,4 @@
-import sqlite3, requests, uuid, json
+import sqlite3, requests, json
 
 def test_get_class_info():
     conn = sqlite3.connect("../classroom.db")
