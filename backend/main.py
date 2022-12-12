@@ -89,7 +89,6 @@ def login(model: models.Login, response: Response):
             conn.close()
             return {"id": rows[0][0], "type": "teacher"}
     else:
-        print(f"rows is: {rows}")
         conn.close()
         return {"id": rows[0][0], "type": "student"}
 
@@ -200,7 +199,6 @@ def create_classroom(response: Response, model: models.CreateClassroom):
     rows = cursor.fetchall()
     cursor.execute("SELECT * FROM Teachers WHERE ID=?", (model.teacher_id,))
     is_teacher = cursor.fetchall()
-    print(rows)
     if not rows and is_teacher:
         id = uuid.uuid4()
         cursor.execute(
@@ -222,7 +220,6 @@ def create_classroom(response: Response, model: models.CreateClassroom):
 
 @app.put("/classrooms/{update_id}", status_code=200)
 def edit_classroom(response: Response, model: models.CreateClassroom, update_id):
-    print("Testing", update_id)
     conn, cursor = start_db()
     cursor.execute(
         "SELECT * FROM Classrooms WHERE TITLE=? AND TEACHER_ID=?;",
@@ -253,7 +250,6 @@ def edit_classroom(response: Response, model: models.CreateClassroom, update_id)
 
 @app.delete("/classrooms/{delete_id}", status_code=204)
 def delete_classroom(response: Response, delete_id):
-    print("Am I getting reached?")
     conn, cursor = start_db()
     cursor.execute("SELECT * FROM Classrooms WHERE ID=?", (delete_id,))
     x = cursor.fetchall()  # Check to see if a class with that name already exists
@@ -280,17 +276,17 @@ def get_classes(response: Response, student_id):
     conn, cursor = start_db()
     cursor.execute(
         "SELECT CLASSROOM_ID FROM StudentsToClassrooms WHERE STUDENT_ID=?;",
-        (student_id,),
+        (student_id,)
     )
     rows = cursor.fetchall()
     rowstosend = list()
     for fid in rows:
         id = fid[0]
         cursor.execute("SELECT * FROM Classrooms WHERE ID=?;", (id,))
-        rows = cursor.fetchall()
-        print("Testing")
-        rowstosend.append(rows[0])
+        rows2 = cursor.fetchall()
+        rowstosend.append(rows2[0])
     conn.close()
+    print(f"Sending: {rowstosend}, fid is {rows}")
     return rowstosend
 
 
@@ -314,9 +310,7 @@ def join_class(response: Response, model: models.AddClass):
         cursor.execute("SELECT * FROM Assignments WHERE CLASS_ID=?;", (model.class_id,))
         rows4 = cursor.fetchall()
         assignments = [x[0] for x in rows4]
-        print(rows4)
         for assignment in assignments:
-            print(model.student_id, assignment)
             cursor.execute(
                 "INSERT INTO SubmitAssignments (STUDENT_ID, ASSIGNMENT_ID, STATUS) VALUES (?,?,?)",
                 (model.student_id, assignment, 0),
@@ -345,9 +339,7 @@ def deregister(response: Response, model: models.AddClass):
         cursor.execute("SELECT * FROM Assignments WHERE CLASS_ID=?;", (model.class_id,))
         rows4 = cursor.fetchall()
         assignments = [x[0] for x in rows4]
-        print(rows4)
         for assignment in assignments:
-            print(model.student_id, assignment)
             cursor.execute(
                 "DELETE FROM SubmitAssignments WHERE STUDENT_ID=? AND ASSIGNMENT_ID=?",
                 (model.student_id, assignment),
@@ -393,7 +385,6 @@ def join_class(response: Response, model: models.AddAssignment, class_id):
         (model.teacher_id, model.class_id),
     )
     rows = cursor.fetchall()
-    print(rows, model.teacher_id, model.class_id)
     cursor.execute("SELECT * FROM Assignments WHERE NAME=?;", (model.name,))
     rows2 = cursor.fetchall()
     cursor.execute(

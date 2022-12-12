@@ -11,14 +11,27 @@ def test_get_students_in_class():
     class_id = json.loads(x2.text)["id"]
     cursor.execute("INSERT INTO StudentsToClassrooms (STUDENT_ID, CLASSROOM_ID) VALUES (?, ?)", (student_id, class_id))
     conn.commit()
-    x = requests.get(f"https://dev.dakshsrivastava.com/classrooms/people/{class_id}", verify=False)
-    info = [x[0] for x in json.loads(x.text)]
-    cursor.execute("SELECT NAME FROM StudentsToClassrooms JOIN Students ON StudentsToClassrooms.STUDENT_ID=Students.ID WHERE CLASSROOM_ID=? ", (class_id,))
-    target = [x[0] for x in cursor.fetchall()]
+    x = requests.get(f"https://dev.dakshsrivastava.com/classes/{student_id}", verify=False)
+    info = json.loads(x.text)
+    #cursor.execute("SELECT NAME FROM StudentsToClassrooms WHERE CLASSROOM_ID=? ", (class_id,))
+    ###
+    cursor.execute(
+        "SELECT CLASSROOM_ID FROM StudentsToClassrooms WHERE STUDENT_ID=?;",
+        (student_id,)
+    )
+    rows = cursor.fetchall()
+    rowstosend = list()
+    for fid in rows:
+        id = fid[0]
+        cursor.execute("SELECT * FROM Classrooms WHERE ID=?;", (id,))
+        rows2 = cursor.fetchall()
+        print("Testing")
+        rowstosend.append(rows2[0])
+    ###
     cursor.execute("DELETE FROM Classrooms WHERE ID=?", (class_id,))
     cursor.execute("DELETE FROM Teachers WHERE ID=?", (teacher_id,))
     cursor.execute("DELETE FROM Students WHERE ID=?", (student_id,))
     cursor.execute("DELETE FROM StudentsToClassrooms WHERE STUDENT_ID=? AND CLASSROOM_ID=?", (student_id, class_id))
     conn.commit()
     conn.close()
-    assert (info == target)
+    assert (info[0][0] == rowstosend[0][0])
