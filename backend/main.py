@@ -391,9 +391,7 @@ def join_class(response: Response, model: models.AddAssignment, class_id):
         "SELECT STUDENT_ID FROM StudentsToClassrooms WHERE CLASSROOM_ID=?;", (class_id,)
     )
     rows3 = cursor.fetchall()
-    print(not rows2)
     if rows and not rows2:
-        print("INSERTING!!")
         id = uuid.uuid4()
         cursor.execute(
             "INSERT INTO Assignments (ID, NAME, DESCRIPTION, CLASS_ID) VALUES (?,?,?,?)",
@@ -420,7 +418,7 @@ def join_class(response: Response, model: models.AddAssignment, class_id):
         conn.close()
 
 
-@app.put("/assignments/{assignment_id}", status_code=201)
+@app.put("/assignments/{assignment_id}", status_code=200)
 def join_class(response: Response, model: models.AddAssignment, assignment_id):
     conn, cursor = start_db()
     cursor.execute(
@@ -430,7 +428,8 @@ def join_class(response: Response, model: models.AddAssignment, assignment_id):
     rows = cursor.fetchall()
     cursor.execute("SELECT * FROM Assignments WHERE ID=?;", (assignment_id,))
     rows2 = cursor.fetchall()
-    if rows and rows2:
+    print(f"Rows2 is receiving {not not rows2}")
+    if rows and (not not rows2):
         id = uuid.uuid4()
         cursor.execute(
             "UPDATE Assignments SET NAME=?, DESCRIPTION=? WHERE ID=?",
@@ -445,6 +444,7 @@ def join_class(response: Response, model: models.AddAssignment, assignment_id):
             "class_id": model.class_id,
         }
     else:
+        print(f"rows1 stats is {not not rows} and rows2 stats is {not not rows2}")
         response.status_code = 400
         conn.close()
 
