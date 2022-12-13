@@ -1,6 +1,6 @@
 import sqlite3, requests, json
 
-def test_get_students_in_class():
+def test_get_classes():
     conn = sqlite3.connect("../classroom.db")
     cursor = conn.cursor()
     x0 = requests.post("https://dev.dakshsrivastava.com/register", json = {"name": "test_get_students_in_clas", "password": "test_get_students_in_clas", "account_type": "Teacher"}, verify=False)

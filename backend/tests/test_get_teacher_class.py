@@ -16,3 +16,4 @@ def test_get_teacher_classrooms():
     conn.commit()
     conn.close()
     assert (classrooms == target)
+
