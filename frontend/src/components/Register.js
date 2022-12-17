@@ -22,7 +22,7 @@ const Register = () => {
         axios.post(`https://dev.dakshsrivastava.com/register/`, {"name":username, "password":password, "account_type":accountType}).then((res) => {
         if (res.data.id !== "NULL")
           {
-            navigate("/login");
+            navigate("/login/");
           }})  
     
   };
@@ -31,9 +31,9 @@ const Register = () => {
     <div>
       <form onSubmit={HandleRegister}>
           Username:
-          <input type="text" autoComplete="off" value={username} onChange={e => changeUsername(e)}/>
+          <input name="username" type="text" autoComplete="off" value={username} onChange={e => changeUsername(e)}/>
           Password:
-          <input type="password" autoComplete="off" value={password} onChange={e => changePassword(e)}/>
+          <input name="password" type="password" autoComplete="off" value={password} onChange={e => changePassword(e)}/>
           <input type="radio" value="Student" name="accountType" onClick={(e) => setAccountType(e.target.value)}/> Student
           <input type="radio" value="Teacher" name="accountType" onClick={(e) => setAccountType(e.target.value)}/> Teacher
         <input type="submit" value="Submit" />

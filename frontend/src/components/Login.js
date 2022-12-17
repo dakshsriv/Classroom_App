@@ -38,9 +38,9 @@ const Login = () => {
     <div>
       <form onSubmit={HandleLogin}>
           Username:
-          <input type="text" autoComplete="off" value={username} onChange={e => changeUsername(e)}/>
+          <input type="text" name="username" autoComplete="off" value={username} onChange={e => changeUsername(e)}/>
           Password:
-          <input type="password" autoComplete="off" value={password} onChange={e => changePassword(e)}/>
+          <input type="password" name="password" autoComplete="off" value={password} onChange={e => changePassword(e)}/>
         <input type="submit" value="Submit" />
         <a href="/register">Register</a>
       </form>
