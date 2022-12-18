@@ -39,9 +39,9 @@ const NewClass = () => {
     <div>
       <form onSubmit={HandleSubmit}>
           Title:
-          <input type="text" autoComplete="off" value={title} onChange={e => changeTitle(e)}/>
+          <input type="text" name="title" autoComplete="off" value={title} onChange={e => changeTitle(e)}/>
           Description:
-          <input type="text" autoComplete="off" value={description} onChange={e => changeDescription(e)}/>
+          <input type="text" name="description" autoComplete="off" value={description} onChange={e => changeDescription(e)}/>
         <input type="submit" value="Submit" />
         <button type="button" onClick={() => navigate("/")}>Cancel</button>
       </form>

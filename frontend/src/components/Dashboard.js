@@ -56,12 +56,12 @@ const Dashboard = () => {
             User ID: {userID}
             <button type="button" name="logout" onClick={logout}>Log out</button>
             {(accountType==="teacher") ? 
-            <button type="button" onClick={() => navigate("/class/new")}>New Class</button> 
+            <button type="button" name="newClass" onClick={() => navigate("/class/new")}>New Class</button> 
             : 
             <div>Join Class: <input type="text" value={joinID} onChange={(e) => setJoinID(e.target.value)}></input><button type="button" onClick={join}>Join</button></div>
             }
             <ul>
-                {classes.map((ID) => <div key={ID}><li ><a href={`http://127.0.0.1:3000/class/${ID?.[0]}`}>{ID?.[1]}</a></li></div>)}
+                {classes.map((ID) => <div key={ID} name={ID?.[1]}><li ><a href={`http://127.0.0.1:3000/class/${ID?.[0]}`}>{ID?.[1]}</a></li></div>)}
             </ul>
         </div>
     );

@@ -29,6 +29,7 @@ describe ('user handling', () => {
 
     })
     it('Logs someone out', () => {
+        
         cy.visit('127.0.0.1:3000/login/')
         cy.get('input[name=username]').type("Teacher")
 
@@ -40,5 +41,24 @@ describe ('user handling', () => {
         // we should be redirected to /
         cy.url().should('eq', 'http://127.0.0.1:3000/login/')
 
+    })
+})
+
+describe ('classroom', () => {
+    it('Creates a Classroom', () => {
+        cy.visit('127.0.0.1:3000/login/')
+        cy.get('input[name=username]').type("Teacher")
+
+        // {enter} causes the form to submit
+        cy.get('input[name=password]').type(`${"Teacher"}{enter}`)
+        cy.get('button[name=newClass]').click()
+
+        cy.get('input[name=title]').type("Testing")
+
+        // {enter} causes the form to submit
+        cy.get('input[name=description]').type(`${"Testing"}`)
+        cy.get('form').submit()
+
+        cy.get('div[name=Testing]').should('be.visible')        
     })
 })
