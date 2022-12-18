@@ -54,7 +54,7 @@ const Dashboard = () => {
     return (
         <div className="App">
             User ID: {userID}
-            <button type="button" onClick={logout}>Log out</button>
+            <button type="button" name="logout" onClick={logout}>Log out</button>
             {(accountType==="teacher") ? 
             <button type="button" onClick={() => navigate("/class/new")}>New Class</button> 
             : 

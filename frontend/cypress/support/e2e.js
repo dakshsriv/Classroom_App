@@ -20,5 +20,9 @@ import './commands'
 // require('./commands')
 
 before(() => {
-    cy.exec('python3 ../backend/schema.py')
+    cy.exec('python3 ../backend/clear.py')
+})
+
+after(() => {
+    cy.exec('python3 ../backend/clear.py')
 })
