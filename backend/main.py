@@ -222,8 +222,8 @@ def create_classroom(response: Response, model: models.CreateClassroom):
 def edit_classroom(response: Response, model: models.CreateClassroom, update_id):
     conn, cursor = start_db()
     cursor.execute(
-        "SELECT * FROM Classrooms WHERE TITLE=? AND TEACHER_ID=?;",
-        (model.title, model.teacher_id),
+        "SELECT * FROM Classrooms WHERE ID=? AND TEACHER_ID=?;",
+        (update_id, model.teacher_id),
     )
     rows = cursor.fetchall()
     if rows:
